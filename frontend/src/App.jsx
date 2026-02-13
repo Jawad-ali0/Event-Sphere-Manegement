@@ -42,7 +42,7 @@ function App() {
 
   return (
     <>
-      {!(user && user.role === 'admin') && <Navbar />}
+      <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />

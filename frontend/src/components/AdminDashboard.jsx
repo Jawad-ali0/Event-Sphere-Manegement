@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useEffect, useState } from 'react';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
@@ -278,7 +279,6 @@ const AdminDashboard = () => {
           >
             Messages ({messages.length})
           </button>
-          <button onClick={logout} className="tab-button" style={{ color: 'red' }}>Logout</button>
         </div>
       </div>
       <div className="dashboard-content">
