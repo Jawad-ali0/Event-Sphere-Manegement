@@ -1,147 +1,104 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import ThemeToggle from './ThemeToggle';
 import './Navbar.css';
-
-// Roman-Urdu: Navbar component - simple, samajhne mein aasan aur accessible
-// Yahan `ThemeToggle` add kia gaya hai jo dark/light mode switch karta hai.
 
 const Navbar = () => {
   const { isAuthenticated, user, logout } = useAuth();
   const navigate = useNavigate();
-  const [activeDropdown, setActiveDropdown] = useState(null);
+  const location = useLocation();
 
   const handleLogout = () => {
     logout();
     navigate('/');
   };
 
-  const toggleDropdown = (menu) => {
-    setActiveDropdown(activeDropdown === menu ? null : menu);
-  };
-
-  const closeDropdown = () => {
-    setActiveDropdown(null);
-  };
-
-  // Admin/Organizer Menu Items
-  const adminMenuItems = [
-    { path: '/dashboard', label: 'Dashboard' },
-    { path: '/expos', label: 'Expo Management' },
-    { path: '/exhibitors', label: 'Exhibitor Management' },
-    { path: '/schedules', label: 'Schedule Management' },
-    { path: '/analytics', label: 'Analytics & Reports' },
-  ];
-
-  // Exhibitor Menu Items
-  const exhibitorMenuItems = [
-    { path: '/dashboard', label: 'Dashboard' },
-    { path: '/expos', label: 'Register for Expo' },
-    { path: '/profile', label: 'My Profile' },
-    { path: '/booths', label: 'Booth Selection' },
-    { path: '/my-booths', label: 'My Booths' },
-    { path: '/messages', label: 'Messages' },
-  ];
-
-  // Attendee Menu Items
-  const attendeeMenuItems = [
-    { path: '/dashboard', label: 'Dashboard' },
-    { path: '/events', label: 'Events' },
-    { path: '/exhibitors', label: 'Exhibitor Search' },
+  // Navigation menu structure
+  const navigationMenu = [
+    { path: '/', label: 'Home' },
+    { path: '/about', label: 'About' },
     { path: '/schedules', label: 'Schedule' },
-    { path: '/my-sessions', label: 'My Sessions' },
-    { path: '/messages', label: 'Messages' },
+    { path: '/exhibitors', label: 'Speakers' },
+    { path: '/services', label: 'Venue' },
+    { path: '/contact', label: 'Contact' },
   ];
-
-  // General Menu Items (for all authenticated users)
-  const generalMenuItems = [
-    { path: '/feedback', label: 'Feedback & Support' },
-  ];
-
-  const getMenuItems = () => {
-    if (!user) return [];
-    
-    const role = user.role;
-    let items = [];
-
-    if (role === 'admin' || role === 'organizer') {
-      items = [...adminMenuItems];
-    } else if (role === 'exhibitor') {
-      items = [...exhibitorMenuItems];
-    } else if (role === 'attendee') {
-      items = [...attendeeMenuItems];
-    }
-
-    return [...items, ...generalMenuItems];
-  };
 
   return (
     <nav className="navbar">
       <div className="navbar-container">
-        <Link to="/" className="navbar-logo">
-          EventSphere
-        </Link>
+        {/* Logo - show only when not authenticated */}
+        {!isAuthenticated && (
+          <Link to="/" className="navbar-logo" title="Event Sphere" aria-label="Event Sphere">
+            Event Sphere
+          </Link>
+        )}
 
-        <div className="navbar-menu">
-          {isAuthenticated ? (
+        {/* Desktop Navigation Menu - Centered */}
+        <div className="navbar-menu-center">
+          {navigationMenu.map((item) => (
+            <Link 
+              key={item.path}
+              to={item.path}
+              title={item.label}
+              aria-label={item.label}
+              className={`navbar-link ${location.pathname === item.path ? 'active' : ''}`}
+            >
+              {item.label}
+            </Link>
+          ))}
+
+          {isAuthenticated && user && user.role === 'admin' && (
+            <Link to="/admin" className={`navbar-link ${location.pathname === '/admin' ? 'active' : ''}`}>Admin</Link>
+          )}
+
+          {isAuthenticated && user && user.role === 'organizer' && (
             <>
-              {/* Desktop Menu */}
-              <div className="navbar-desktop-menu">
-                {getMenuItems().map((item) => (
-                  <Link
-                    key={item.path}
-                    to={item.path}
-                    className="navbar-link"
-                    onClick={closeDropdown}
-                  >
-                    {item.label}
-                  </Link>
-                ))}
+              <Link to="/events" title="Events" aria-label="Events" className={`navbar-link ${location.pathname === '/events' ? 'active' : ''}`}>Events</Link>
+              <Link to="/booths" title="Booths" aria-label="Booths" className={`navbar-link ${location.pathname === '/booths' ? 'active' : ''}`}>Booths</Link>
+              <Link to="/analytics" title="Analytics" aria-label="Analytics" className={`navbar-link ${location.pathname === '/analytics' ? 'active' : ''}`}>Analytics</Link>
+              <Link to="/schedule-management" title="Schedule Management" aria-label="Schedule Management" className={`navbar-link ${location.pathname === '/schedule-management' ? 'active' : ''}`}>Schedule Management</Link>
+            </>
+          )}
+
+          {isAuthenticated && user && user.role === 'exhibitor' && (
+            <>
+              <Link to="/exhibitor-register" title="Exhibitor Registration" aria-label="Exhibitor Registration" className={`navbar-link ${location.pathname === '/exhibitor-register' ? 'active' : ''}`}>Exhibitor</Link>
+              <Link to="/my-booths" title="My Booths" aria-label="My Booths" className={`navbar-link ${location.pathname === '/my-booths' ? 'active' : ''}`}>My Booths</Link>
+              <Link to="/feedback" title="Feedback" aria-label="Feedback" className={`navbar-link ${location.pathname === '/feedback' ? 'active' : ''}`}>Feedback</Link>
+            </>
+          )}
+
+          {isAuthenticated && user && user.role === 'attendee' && (
+            <>
+              <Link to="/events" title="Events" aria-label="Events" className={`navbar-link ${location.pathname === '/events' ? 'active' : ''}`}>Events</Link>
+              <Link to="/expos" title="Expos" aria-label="Expos" className={`navbar-link ${location.pathname === '/expos' ? 'active' : ''}`}>Expos</Link>
+              <Link to="/my-sessions" title="My Sessions" aria-label="My Sessions" className={`navbar-link ${location.pathname === '/my-sessions' ? 'active' : ''}`}>My Sessions</Link>
+            </>
+          )}
+        </div>
+
+        {/* Right Side Actions */}
+        <div className="navbar-actions">
+          {isAuthenticated && user ? (
+            <>
+              <div className="navbar-user-info">
+                <span className="user-name" title={`${user.firstName} ${user.lastName || ''}`}>{user.firstName}</span>
+                
               </div>
 
-              {/* Mobile Menu Button */}
-              <button
-                className="navbar-mobile-toggle"
-                onClick={() => toggleDropdown('mobile')}
-                aria-label="Toggle menu"
+              <button 
+                onClick={handleLogout}
+                className="btn-logout"
+                title="Logout"
               >
-                <span></span>
-                <span></span>
-                <span></span>
-              </button>
-
-              {/* Mobile Dropdown */}
-              {activeDropdown === 'mobile' && (
-                <div className="navbar-mobile-menu">
-                  {getMenuItems().map((item) => (
-                    <Link
-                      key={item.path}
-                      to={item.path}
-                      className="navbar-mobile-link"
-                      onClick={closeDropdown}
-                    >
-                      {item.label}
-                    </Link>
-                  ))}
-                </div>
-              )}
-
-              <div className="navbar-user">
-                <span className="user-name">{user?.firstName} {user?.lastName}</span>
-                <span className="user-role">({user?.role})</span>
-              </div>
-              <ThemeToggle />
-              <button onClick={handleLogout} className="navbar-button">
                 Logout
               </button>
             </>
           ) : (
             <>
-              <Link to="/" className="navbar-link">Home</Link>
-              <Link to="/login" className="navbar-link">Login</Link>
-              <ThemeToggle />
-              <Link to="/signup" className="navbar-button">
+              <Link to="/login" className="navbar-link-auth" title="Login">
+                Login
+              </Link>
+              <Link to="/signup" className="btn-buy-tickets" title="Sign Up">
                 Sign Up
               </Link>
             </>

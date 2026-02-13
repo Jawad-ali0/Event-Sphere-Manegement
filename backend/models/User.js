@@ -50,6 +50,23 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  // User's personal Gmail settings for sending emails
+  smtpEmail: {
+    type: String,
+    trim: true,
+    lowercase: true,
+    default: null, // Optional - user can configure their own Gmail
+  },
+  // We store SMTP password encrypted. Use helper methods below to set / get.
+  smtpPassword: {
+    type: String,
+    default: null, // Encrypted - user's Gmail password (iv:encrypted)
+    select: false, // Don't return by default
+  },
+  smtpConfigured: {
+    type: Boolean,
+    default: false,
+  },
 }, {
   timestamps: true,
 });
@@ -84,6 +101,39 @@ userSchema.methods.getResetPasswordToken = function () {
   this.resetPasswordExpire = Date.now() + 10 * 60 * 1000; // 10 minutes
   
   return resetToken;
+};
+
+// SMTP password encryption helpers
+userSchema.methods.setSmtpPassword = function (plainPassword) {
+  const crypto = require('crypto');
+  const key = process.env.SMTP_ENCRYPTION_KEY;
+  if (!key || key.length < 32) {
+    throw new Error('SMTP_ENCRYPTION_KEY must be set and 32 bytes long');
+  }
+
+  const iv = crypto.randomBytes(16);
+  const cipher = crypto.createCipheriv('aes-256-cbc', Buffer.from(key), iv);
+  let encrypted = cipher.update(plainPassword, 'utf8', 'hex');
+  encrypted += cipher.final('hex');
+  // Store as iv:encrypted
+  this.smtpPassword = iv.toString('hex') + ':' + encrypted;
+};
+
+userSchema.methods.getSmtpPassword = function () {
+  const crypto = require('crypto');
+  const key = process.env.SMTP_ENCRYPTION_KEY;
+  if (!this.smtpPassword) return null;
+  if (!key || key.length < 32) {
+    throw new Error('SMTP_ENCRYPTION_KEY must be set and 32 bytes long');
+  }
+
+  const [ivHex, encrypted] = this.smtpPassword.split(':');
+  if (!ivHex || !encrypted) return null;
+  const iv = Buffer.from(ivHex, 'hex');
+  const decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(key), iv);
+  let decrypted = decipher.update(encrypted, 'hex', 'utf8');
+  decrypted += decipher.final('utf8');
+  return decrypted;
 };
 
 module.exports = mongoose.model('User', userSchema);

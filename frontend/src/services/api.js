@@ -72,6 +72,20 @@ export const authAPI = {
     });
     return response.data;
   },
+
+  // Email configuration endpoints
+  configureEmail: async (smtpEmail, smtpPassword) => {
+    const response = await api.post('/auth/configure-email', {
+      smtpEmail,
+      smtpPassword,
+    });
+    return response.data;
+  },
+
+  getEmailConfig: async () => {
+    const response = await api.get('/auth/email-config');
+    return response.data;
+  },
 };
 
 export default api;

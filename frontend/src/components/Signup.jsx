@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import Navbar from './Navbar';
 import './Auth.css';
 
 const Signup = () => {
@@ -155,7 +154,6 @@ const Signup = () => {
 
   return (
     <>
-      <Navbar />
       <div className="auth-container">
         <div className="auth-card">
         <div className="auth-logo">EventSphere</div>

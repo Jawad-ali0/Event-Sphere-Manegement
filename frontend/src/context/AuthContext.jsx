@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useState, useEffect } from 'react';
 import { authAPI } from '../services/api';
 
@@ -35,6 +36,7 @@ export const AuthProvider = ({ children }) => {
             localStorage.removeItem('user');
           }
         } catch (err) {
+          console.error('Token verification failed:', err);
           // Token invalid or expired
           localStorage.removeItem('token');
           localStorage.removeItem('user');

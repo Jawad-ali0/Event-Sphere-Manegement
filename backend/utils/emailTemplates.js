@@ -20,7 +20,7 @@ const getPasswordResetEmailTemplate = (resetUrl, resetToken, userName) => {
         
         <p>We received a request to reset your password for your EventSphere Management account.</p>
         
-        <p>Click the button below to reset your password:</p>
+        <p><strong>Click the button below to reset your password:</strong></p>
         
         <div style="text-align: center; margin: 30px 0;">
           <a href="${resetUrl}" 

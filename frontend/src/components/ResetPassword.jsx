@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { authAPI } from '../services/api';
-import Navbar from './Navbar';
 import './Auth.css';
 
 const ResetPassword = () => {
@@ -78,7 +77,6 @@ const ResetPassword = () => {
 
   return (
     <>
-      <Navbar />
       <div className="auth-container">
         <div className="auth-card">
         <div className="auth-logo">EventSphere</div>

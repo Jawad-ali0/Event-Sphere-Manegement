@@ -1,0 +1,498 @@
+/* Exhibitors Page Styles */
+
+.exhibitors-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+}
+
+/* Page Header */
+.exhibitors-header {
+  padding: 60px 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.exhibitors-header::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -10%;
+  width: 400px;
+  height: 400px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  animation: float 6s ease-in-out infinite;
+}
+
+.exhibitors-header::after {
+  content: '';
+  position: absolute;
+  bottom: -30%;
+  left: -5%;
+  width: 300px;
+  height: 300px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 50%;
+  animation: float 8s ease-in-out infinite reverse;
+}
+
+.exhibitors-header .container {
+  position: relative;
+  z-index: 1;
+}
+
+.exhibitors-header h1 {
+  font-size: 3.5rem;
+  font-weight: 700;
+  margin: 0 0 15px 0;
+  animation: slideInDown 0.8s ease-out;
+}
+
+.exhibitors-header p {
+  font-size: 1.3rem;
+  margin: 0;
+  opacity: 0.95;
+  animation: slideInUp 0.8s ease-out 0.2s both;
+}
+
+/* Exhibitors Content */
+.exhibitors-content {
+  padding: 80px 20px;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Category Filter */
+.category-filter {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 60px;
+}
+
+.filter-group {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.filter-btn {
+  padding: 12px 25px;
+  background: white;
+  border: 2px solid #e0e0e0;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  color: #666;
+  font-size: 0.95rem;
+}
+
+.filter-btn:hover {
+  border-color: #667eea;
+  color: #667eea;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+}
+
+.filter-btn.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.3);
+}
+
+/* Exhibitors Grid */
+.exhibitors-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 40px;
+  margin-bottom: 80px;
+}
+
+.exhibitor-card {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.exhibitor-card:hover {
+  transform: translateY(-12px);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.12);
+}
+
+.exhibitor-image-wrapper {
+  position: relative;
+  width: 100%;
+  height: 280px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.exhibitor-image {
+  width: 120px;
+  height: 120px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: white;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.4s ease;
+}
+
+.exhibitor-card:hover .exhibitor-image {
+  transform: scale(1.15);
+}
+
+.exhibitor-badge {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 12px rgba(245, 87, 108, 0.3);
+}
+
+.social-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 15px;
+  padding: 30px 15px 15px 15px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.4s ease;
+}
+
+.exhibitor-card:hover .social-overlay {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.social-link {
+  width: 45px;
+  height: 45px;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #667eea;
+  font-size: 1.2rem;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.social-link:hover {
+  background: #667eea;
+  color: white;
+  transform: translateY(-4px);
+}
+
+/* Exhibitor Info */
+.exhibitor-info {
+  padding: 25px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.exhibitor-name {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #333;
+  margin: 0 0 5px 0;
+}
+
+.exhibitor-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #667eea;
+  margin: 0 0 3px 0;
+}
+
+.exhibitor-company {
+  font-size: 0.85rem;
+  color: #999;
+  margin: 0 0 12px 0;
+}
+
+.exhibitor-bio {
+  font-size: 0.9rem;
+  color: #666;
+  line-height: 1.5;
+  margin: 0 0 20px 0;
+  flex: 1;
+}
+
+.view-profile-btn {
+  align-self: flex-start;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+}
+
+.view-profile-btn:hover {
+  transform: translateX(4px);
+  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.3);
+}
+
+/* CTA Section */
+.exhibitors-cta {
+  margin-top: 60px;
+  padding-top: 80px;
+}
+
+.cta-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 16px;
+  padding: 60px 40px;
+  text-align: center;
+  color: white;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 12px 32px rgba(102, 126, 234, 0.3);
+}
+
+.cta-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -10%;
+  width: 400px;
+  height: 400px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  animation: float 6s ease-in-out infinite;
+}
+
+.cta-card::after {
+  content: '';
+  position: absolute;
+  bottom: -30%;
+  left: -5%;
+  width: 300px;
+  height: 300px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 50%;
+  animation: float 8s ease-in-out infinite reverse;
+}
+
+.cta-card h2 {
+  position: relative;
+  z-index: 1;
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin: 0 0 15px 0;
+}
+
+.cta-card p {
+  position: relative;
+  z-index: 1;
+  font-size: 1.1rem;
+  margin: 0 0 30px 0;
+  opacity: 0.95;
+}
+
+.btn {
+  padding: 14px 35px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  border: none;
+  font-size: 1rem;
+}
+
+.btn-primary {
+  background: white;
+  color: #667eea;
+  position: relative;
+  z-index: 1;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Animations */
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+  .exhibitors-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 30px;
+  }
+
+  .exhibitors-header h1 {
+    font-size: 2.5rem;
+  }
+
+  .cta-card {
+    padding: 40px 30px;
+  }
+
+  .cta-card h2 {
+    font-size: 1.8rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .exhibitors-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 25px;
+  }
+
+  .filter-group {
+    gap: 10px;
+  }
+
+  .filter-btn {
+    padding: 10px 18px;
+    font-size: 0.85rem;
+  }
+
+  .exhibitors-header {
+    padding: 40px 20px;
+  }
+
+  .exhibitors-header h1 {
+    font-size: 2rem;
+  }
+
+  .exhibitors-header p {
+    font-size: 1.1rem;
+  }
+
+  .exhibitor-info {
+    padding: 20px;
+  }
+
+  .cta-card {
+    padding: 30px 20px;
+  }
+
+  .cta-card h2 {
+    font-size: 1.5rem;
+  }
+
+  .cta-card p {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .exhibitors-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .filter-group {
+    flex-direction: column;
+  }
+
+  .filter-btn {
+    width: 100%;
+  }
+
+  .exhibitors-header h1 {
+    font-size: 1.7rem;
+  }
+
+  .exhibitors-header p {
+    font-size: 0.95rem;
+  }
+
+  .exhibitor-image {
+    width: 80px;
+    height: 80px;
+    font-size: 2.5rem;
+  }
+
+  .exhibitor-name {
+    font-size: 1.1rem;
+  }
+
+  .cta-card {
+    padding: 20px 15px;
+  }
+
+  .cta-card h2 {
+    font-size: 1.2rem;
+  }
+
+  .cta-card p {
+    font-size: 0.9rem;
+  }
+}

@@ -1,5 +1,4 @@
 import { useAuth } from '../context/AuthContext';
-import Navbar from './Navbar';
 import './Dashboard.css';
 
 const Dashboard = () => {
@@ -21,7 +20,6 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard-container">
-      <Navbar />
       <div className="dashboard-header">
         <h1>Welcome to EventSphere Management</h1>
       </div>

@@ -46,4 +46,18 @@ const boothSchema = new mongoose.Schema({
 // Index for efficient queries
 boothSchema.index({ expo: 1, boothNumber: 1 }, { unique: true });
 
+boothSchema.add({
+  productsServices: [{
+    name: String,
+    description: String,
+    category: String,
+  }],
+  staff: [{
+    name: String,
+    email: String,
+    phone: String,
+    role: String,
+  }],
+});
+
 module.exports = mongoose.model('Booth', boothSchema);

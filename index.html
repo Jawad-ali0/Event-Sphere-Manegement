@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LPK STP Japanese Center</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+        }
+        .buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 15px 30px;
+            background: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1.1em;
+            transition: background 0.3s;
+        }
+        .btn:hover {
+            background: #45a049;
+        }
+        .btn.secondary {
+            background: #2196F3;
+        }
+        .btn.secondary:hover {
+            background: #0b7dda;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎌 LPK STP Japanese Center</h1>
+        <p>Welcome to the Japanese Language Learning Center Management System</p>
+        <div class="buttons">
+            <a href="frontend/" class="btn">🌐 Frontend Application</a>
+            <a href="backend/" class="btn secondary">⚙️ Backend API</a>
+        </div>
+        <p style="margin-top: 30px; font-size: 0.9em; opacity: 0.8;">
+            Powered by Event Sphere Management System
+        </p>
+    </div>
+</body>
+</html>

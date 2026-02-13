@@ -1,133 +1,86 @@
-/* Carousel Section */
+﻿/* Carousel Section */
 .carousel-section {
   width: 100%;
   padding: 60px 20px;
-  background: linear-gradient(135deg, #f5f7fa 0%, #eef2ff 100%);
-  overflow-x: hidden;
+  background: #f8f9fa;
 }
 
 .carousel-container {
-  max-width: 1400px;
+  max-width: 1100px;
   margin: 0 auto;
-}
-
-/* Prevent horizontal overflow from large slide content */
-.carousel-wrapper,
-.carousel-container,
-.carousel-section,
-.carousel-slides,
-.slide-content {
-  box-sizing: border-box;
-}
-
-.carousel-container,
-.carousel-slides {
-  overflow-x: hidden;
 }
 
 /* Carousel Wrapper */
 .carousel-wrapper {
   position: relative;
-  background: white;
   border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
-  margin-bottom: 60px;
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.12);
+  background: white;
 }
 
-/* Subtle overlay for depth */
-.carousel-wrapper::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: linear-gradient(180deg, rgba(0,0,0,0.02), rgba(0,0,0,0.06));
-  z-index: 1;
-}
-
-/* Slides Container */
-.carousel-slides {
+.carousel-content {
   position: relative;
   width: 100%;
-  height: 500px;
+  height: 400px;
   overflow: hidden;
 }
 
-.carousel-slide {
+.carousel-item {
   position: absolute;
-  top: 0;
-  left: 0;
   width: 100%;
   height: 100%;
   opacity: 0;
-  transform: translateX(100%);
-  transition: opacity 0.6s ease, transform 0.6s ease;
-  background: linear-gradient(135deg, var(--slide-color) 0%, rgba(102, 126, 234, 0.8) 100%);
+  transition: opacity 0.7s ease-in-out;
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding: 40px;
+  justify-content: space-between;
+  background: linear-gradient(135deg, var(--slide-color) 0%, rgba(102, 126, 234, 0.7) 100%);
+  padding: 60px 80px;
+  box-sizing: border-box;
 }
 
-.carousel-slide.active {
+.carousel-item.active {
   opacity: 1;
-  transform: translateX(0);
-  z-index: 2;
-  animation: slideActive 0.6s ease;
+  z-index: 5;
 }
 
-@keyframes slideActive {
-  from { transform: scale(0.99) translateY(6px); }
-  to { transform: scale(1) translateY(0); }
-}
-
-.slide-content {
-  display: flex;
-  gap: 60px;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  max-width: 1200px;
-  color: white;
-  min-width: 0; /* allow flex children to shrink on small screens */
-}
-
-.slide-image {
+/* Icon Section */
+.item-icon {
   flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 200px;
-  height: 200px;
+  width: 140px;
+  height: 140px;
   background: rgba(255, 255, 255, 0.15);
   border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 70px;
+  margin-right: 50px;
   backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  animation: slideInIcon 0.8s ease-out;
 }
 
-.slide-emoji {
-  font-size: 100px;
-  display: block;
+@keyframes slideInIcon {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
-.slide-text {
+/* Content Section */
+.item-content {
   flex: 1;
-  min-width: 300px;
-  animation: slideInText 0.8s ease 0.2s both;
+  color: white;
+  animation: slideInContent 0.8s ease-out 0.1s both;
 }
 
-/* Allow slide text to break instead of creating horizontal scroll */
-.slide-title,
-.slide-subtitle,
-.slide-description {
-  word-break: break-word;
-  white-space: normal;
-}
-
-.slide-text {
-  min-width: 0; /* prevent overflow from long content */
-}
-
-@keyframes slideInText {
+@keyframes slideInContent {
   from {
     opacity: 0;
     transform: translateY(20px);
@@ -138,41 +91,44 @@
   }
 }
 
-.slide-title {
-  font-size: clamp(1.6rem, 3vw, 3.5rem);
+.item-content h3 {
+  font-size: 2.8rem;
   font-weight: 800;
-  margin: 0 0 10px 0;
-  text-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  margin: 0 0 8px 0;
+  letter-spacing: -0.5px;
   line-height: 1.1;
 }
 
-.slide-subtitle {
-  font-size: clamp(1rem, 2vw, 1.8rem);
+.item-content .subtitle {
+  font-size: 1.3rem;
   font-weight: 600;
-  margin: 0 0 20px 0;
-  opacity: 0.95;
+  margin: 0 0 16px 0;
+  color: #fff;
+  opacity: 1;
 }
 
-.slide-description {
-  font-size: 1.1rem;
-  margin: 0 0 30px 0;
-  opacity: 0.9;
-  line-height: 1.6;
+.item-content .description {
+  font-size: 1rem;
+  margin: 0 0 25px 0;
+  color: #fff;
+  opacity: 1;
   max-width: 500px;
+  line-height: 1.6;
 }
 
-.slide-info {
+/* Event Details */
+.event-details {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 12px;
   margin-bottom: 30px;
   padding: 20px;
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   backdrop-filter: blur(10px);
 }
 
-.info-item {
+.detail-item {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -180,31 +136,35 @@
   font-weight: 500;
 }
 
-.info-icon {
-  font-size: 1.3rem;
+.detail-item .icon {
+  font-size: 1.2rem;
 }
 
-.slide-button {
-  padding: 16px 40px;
+/* Register Button */
+.register-btn {
+  padding: 12px 32px;
   background: white;
   color: var(--slide-color);
   border: none;
   border-radius: 50px;
-  font-size: 16px;
+  font-size: 0.95rem;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
   letter-spacing: 0.5px;
+  display: inline-block;
+  margin-bottom: 20px;
+  align-self: flex-start;
 }
 
-.slide-button:hover {
+.register-btn:hover {
   transform: translateY(-3px);
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
 }
 
-/* Navigation Arrows */
-.carousel-arrow {
+/* Navigation Buttons */
+.carousel-btn {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -213,202 +173,83 @@
   background: rgba(255, 255, 255, 0.25);
   border: 2px solid rgba(255, 255, 255, 0.5);
   color: white;
-  font-size: 24px;
+  font-size: 22px;
   border-radius: 50%;
   cursor: pointer;
-  transition: all 0.3s ease;
   z-index: 10;
+  transition: all 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  backdrop-filter: blur(10px);
 }
 
-.carousel-arrow:focus { outline: 3px solid rgba(255,255,255,0.25); }
-
-.carousel-arrow:hover {
+.carousel-btn:hover {
   background: rgba(255, 255, 255, 0.4);
   border-color: white;
   transform: translateY(-50%) scale(1.1);
 }
 
-.carousel-arrow-prev {
+.carousel-btn.prev {
   left: 30px;
 }
 
-.carousel-arrow-next {
+.carousel-btn.next {
   right: 30px;
 }
 
-/* Indicators/Dots */
-.carousel-indicators {
+/* Dots */
+.carousel-dots {
   position: absolute;
-  bottom: 30px;
+  bottom: 25px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  gap: 12px;
+  gap: 10px;
   z-index: 10;
 }
 
-.indicator-dot {
-  width: 12px;
-  height: 12px;
+.dot {
+  width: 11px;
+  height: 11px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.4);
-  border: 2px solid rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.5);
+  border: none;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
-.indicator-dot.active {
+.dot:hover {
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.dot.active {
   background: white;
-  width: 32px;
+  width: 28px;
   border-radius: 6px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-.indicator-dot:hover {
-  background: rgba(255, 255, 255, 0.6);
-  transform: scale(1.2);
-}
-
-/* Resume Button */
-.resume-autoplay {
-  position: absolute;
-  bottom: 30px;
-  right: 30px;
-  padding: 10px 20px;
-  background: rgba(255, 255, 255, 0.25);
-  color: white;
-  border: 2px solid rgba(255, 255, 255, 0.5);
-  border-radius: 50px;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 14px;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
-  z-index: 10;
-}
-
-.resume-autoplay:hover {
-  background: rgba(255, 255, 255, 0.4);
-  border-color: white;
-}
-
-/* Carousel Summary */
-.carousel-summary {
-  text-align: center;
-}
-
-.carousel-summary h3 {
-  font-size: 2rem;
-  font-weight: 700;
-  margin: 0 0 40px 0;
-  color: #333;
-}
-
-.summary-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 20px;
-}
-
-.summary-card {
-  background: white;
-  padding: 25px;
-  border-radius: 15px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  border: 2px solid transparent;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-}
-
-.summary-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
-}
-
-.summary-card.active {
-  border-color: #667eea;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  transform: translateY(-8px) scale(1.02);
-}
-
-/* Make summary cards touch-friendly */
-.summary-card { min-height: 110px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-
-/* Improved responsive behavior to avoid horizontal overflow */
-@media (max-width: 768px) {
-  .carousel-slides { height: auto; }
-  .carousel-slide { position: relative; transform: none; opacity: 1; height: auto; padding: 30px; }
-  .carousel-slide:not(.active) { display: none; }
-}
-
-.summary-emoji {
-  font-size: 3.5rem;
-  display: block;
-  margin-bottom: 15px;
-}
-
-.summary-card h4 {
-  font-size: 1.2rem;
-  font-weight: 700;
-  margin: 0 0 8px 0;
-  color: inherit;
-}
-
-.summary-card p {
-  font-size: 0.9rem;
-  margin: 0;
-  color: #666;
-}
-
-.summary-card.active p {
-  color: rgba(255, 255, 255, 0.9);
-}
-
-/* Responsive Design */
+/* Responsive */
 @media (max-width: 1024px) {
-  .carousel-slides {
-    height: 450px;
+  .carousel-item {
+    padding: 50px 50px;
+    flex-direction: column;
+    text-align: center;
   }
 
-  .slide-content {
-    gap: 40px;
+  .item-icon {
+    margin-right: 0;
+    margin-bottom: 30px;
+    width: 120px;
+    height: 120px;
+    font-size: 60px;
   }
 
-  .slide-title {
-    font-size: 2.8rem;
+  .item-content h3 {
+    font-size: 2.2rem;
   }
 
-  .slide-subtitle {
-    font-size: 1.4rem;
-  }
-
-  .slide-image {
-    width: 160px;
-    height: 160px;
-  }
-
-  .slide-emoji {
-    font-size: 80px;
-  }
-
-  .carousel-arrow {
-    width: 45px;
-    height: 45px;
-    font-size: 20px;
-  }
-
-  .carousel-arrow-prev {
-    left: 15px;
-  }
-
-  .carousel-arrow-next {
-    right: 15px;
+  .item-content .subtitle {
+    font-size: 1.1rem;
   }
 }
 
@@ -417,186 +258,114 @@
     padding: 40px 15px;
   }
 
-  .carousel-slides {
-    height: 550px;
+  .carousel-content {
+    height: 500px;
   }
 
-  .slide-content {
-    flex-direction: column;
-    gap: 30px;
-    padding: 30px;
+  .carousel-item {
+    padding: 40px 30px;
   }
 
-  .slide-image {
-    width: 150px;
-    height: 150px;
+  .item-icon {
+    width: 100px;
+    height: 100px;
+    font-size: 50px;
+    margin-bottom: 20px;
   }
 
-  .slide-emoji {
-    font-size: 70px;
+  .item-content h3 {
+    font-size: 1.8rem;
   }
 
-  .slide-title {
-    font-size: 2rem;
-  }
-
-  .slide-subtitle {
-    font-size: 1.2rem;
-  }
-
-  .slide-description {
+  .item-content .subtitle {
     font-size: 1rem;
   }
 
-  .carousel-arrow {
+  .item-content .description {
+    font-size: 0.95rem;
+  }
+
+  .event-details {
+    padding: 15px;
+    gap: 10px;
+  }
+
+  .detail-item {
+    font-size: 0.95rem;
+  }
+
+  .carousel-btn {
     width: 40px;
     height: 40px;
     font-size: 18px;
   }
 
-  .carousel-arrow-prev {
-    left: 10px;
+  .carousel-btn.prev {
+    left: 15px;
   }
 
-  .carousel-arrow-next {
-    right: 10px;
-  }
-
-  .carousel-indicators {
-    bottom: 20px;
-  }
-
-  .indicator-dot {
-    width: 10px;
-    height: 10px;
-  }
-
-  .indicator-dot.active {
-    width: 28px;
-  }
-
-  .summary-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-  }
-
-  .summary-card {
-    padding: 20px;
-  }
-
-  .summary-emoji {
-    font-size: 2.5rem;
+  .carousel-btn.next {
+    right: 15px;
   }
 }
 
 @media (max-width: 480px) {
-  .carousel-section {
-    padding: 30px 10px;
+  .carousel-content {
+    height: 440px;
   }
 
-  .carousel-slides {
-    height: 600px;
+  .carousel-item {
+    padding: 30px 20px;
   }
 
-  .slide-content {
-    padding: 20px;
+  .item-icon {
+    width: 80px;
+    height: 80px;
+    font-size: 40px;
   }
 
-  .slide-image {
-    width: 120px;
-    height: 120px;
+  .item-content h3 {
+    font-size: 1.4rem;
   }
 
-  .slide-emoji {
-    font-size: 60px;
-  }
-
-  .slide-title {
-    font-size: 1.5rem;
-    margin-bottom: 5px;
-  }
-
-  .slide-subtitle {
-    font-size: 1rem;
-    margin-bottom: 10px;
-  }
-
-  .slide-description {
+  .item-content .subtitle {
     font-size: 0.9rem;
+  }
+
+  .item-content .description {
+    font-size: 0.85rem;
     margin-bottom: 15px;
   }
 
-  .slide-info {
-    padding: 15px;
-    margin-bottom: 15px;
-    gap: 10px;
-  }
-
-  .info-item {
-    font-size: 0.9rem;
+  .event-details {
+    padding: 12px;
     gap: 8px;
   }
 
-  .info-icon {
-    font-size: 1.1rem;
+  .detail-item {
+    font-size: 0.85rem;
   }
 
-  .slide-button {
-    padding: 12px 30px;
-    font-size: 14px;
+  .register-btn {
+    padding: 10px 30px;
+    font-size: 0.9rem;
   }
 
-  .carousel-arrow {
-    width: 36px;
-    height: 36px;
+  .carousel-btn {
+    width: 35px;
+    height: 35px;
     font-size: 16px;
   }
 
-  .carousel-arrow-prev {
-    left: 5px;
+  .carousel-btn.prev {
+    left: 8px;
   }
 
-  .carousel-arrow-next {
-    right: 5px;
+  .carousel-btn.next {
+    right: 8px;
   }
 
-  .carousel-indicators {
-    gap: 8px;
+  .carousel-dots {
     bottom: 15px;
-  }
-
-  .indicator-dot {
-    width: 8px;
-    height: 8px;
-  }
-
-  .indicator-dot.active {
-    width: 20px;
-  }
-
-  .carousel-summary h3 {
-    font-size: 1.5rem;
-    margin-bottom: 25px;
-  }
-
-  .summary-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .summary-card {
-    padding: 15px;
-  }
-
-  .summary-emoji {
-    font-size: 2rem;
-    margin-bottom: 10px;
-  }
-
-  .summary-card h4 {
-    font-size: 1rem;
-  }
-
-  .summary-card p {
-    font-size: 0.85rem;
   }
 }

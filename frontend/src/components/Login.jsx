@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import Navbar from './Navbar';
 import './Auth.css';
 
 const Login = () => {
@@ -76,7 +75,9 @@ const Login = () => {
       const result = await login(formData.email, formData.password);
 
       if (result.success) {
-        navigate('/dashboard');
+        // Redirect admin users to admin dashboard, others to regular dashboard
+        const redirectPath = result.data?.user?.role === 'admin' ? '/admin' : '/dashboard';
+        navigate(redirectPath);
       } else {
         // Check if error is specific to email or password
         const errorMsg = result.message || 'Login failed';
@@ -113,7 +114,6 @@ const Login = () => {
 
   return (
     <>
-      <Navbar />
       <div className="auth-container">
         <div className="auth-card">
         <div className="auth-logo">EventSphere</div>

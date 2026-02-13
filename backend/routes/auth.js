@@ -2,7 +2,7 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 const User = require('../models/User');
-const { protect } = require('../middleware/auth');
+const { protect, authorize } = require('../middleware/auth');
 const crypto = require('crypto');
 const sendEmail = require('../utils/sendEmail');
 const { getPasswordResetEmailTemplate, getPasswordResetTextTemplate } = require('../utils/emailTemplates');
@@ -291,49 +291,57 @@ router.post('/forgotpassword', async (req, res) => {
       `${user.firstName} ${user.lastName}`
     );
 
-    // Check if email credentials are configured (not empty strings)
-    const emailConfigured = process.env.SMTP_EMAIL && 
-                            process.env.SMTP_PASSWORD && 
-                            process.env.SMTP_EMAIL !== 'your-email@gmail.com' &&
-                            process.env.SMTP_PASSWORD !== 'your-app-password-here';
-    
-    if (emailConfigured) {
-      try {
-        // Send email
-        await sendEmail({
-          email: user.email,
-          subject: 'Password Reset Request - EventSphere Management',
-          message: textMessage,
-          html: message,
+    // Always try to send email (will use Ethereal in development mode if SMTP not configured)
+    try {
+      console.log(`📧 Sending password reset email to: ${user.email}`);
+      
+      // Send email (will use Ethereal Email if SMTP not configured)
+      const emailResult = await sendEmail({
+        email: user.email,
+        subject: 'Password Reset Request - EventSphere Management',
+        message: textMessage,
+        html: message,
+      });
+
+      // Check if it's development mode with Ethereal Email
+      if (emailResult.isDevelopment && emailResult.previewUrl) {
+        console.log(`✅ Password reset email sent successfully (Development Mode) to ${user.email}`);
+        console.log(`   Preview URL: ${emailResult.previewUrl}`);
+        
+        res.status(200).json({
+          success: true,
+          message: 'Password reset email sent successfully! (Development Mode)',
+          previewUrl: emailResult.previewUrl,
+          resetToken: resetToken, // Also return token for convenience
+          resetUrl: resetUrl,
+          note: 'Open the preview URL above to view the email. In production, configure SMTP_EMAIL and SMTP_PASSWORD in .env file',
+          isDevelopment: true,
         });
+      } else {
+        console.log(`✅ Password reset email sent successfully to ${user.email}`);
 
         res.status(200).json({
           success: true,
-          message: 'Password reset email sent successfully. Please check your email.',
-        });
-      } catch (emailError) {
-        console.error('Email sending error:', emailError);
-        
-        // If email fails, clear the reset token
-        user.resetPasswordToken = undefined;
-        user.resetPasswordExpire = undefined;
-        await user.save({ validateBeforeSave: false });
-
-        res.status(500).json({
-          success: false,
-          message: 'Email could not be sent. Please try again later.',
-          error: process.env.NODE_ENV === 'development' ? emailError.message : undefined,
+          message: 'Password reset email sent successfully! Please check your email inbox (including spam folder) for the reset link.',
         });
       }
-    } else {
-      // Development mode: Return token in response if email not configured
-      console.warn('⚠️ Email not configured. Returning reset token in response (development mode only).');
+    } catch (emailError) {
+      console.error('❌ Email sending error:', emailError.message);
+      console.error('   User email:', user.email);
+      console.error('   Full error:', emailError);
+      
+      // Don't clear the reset token - we'll return it as fallback
+      // The token is already saved, so we can use it for password reset
+      
+      // Return token in response as fallback (development mode)
       res.status(200).json({
         success: true,
-        message: 'Password reset token generated. Email service not configured.',
-        resetToken: resetToken, // Only in development
+        message: 'Email sending failed, but reset token generated. Use the information below to reset your password.',
+        resetToken: resetToken,
         resetUrl: resetUrl,
-        note: 'In production, configure SMTP_EMAIL and SMTP_PASSWORD in .env file',
+        error: process.env.NODE_ENV === 'development' ? emailError.message : undefined,
+        note: 'Configure SMTP_EMAIL and SMTP_PASSWORD in .env file for email functionality. You can use the reset token below to reset your password.',
+        isDevelopment: true,
       });
     }
   } catch (error) {
@@ -457,6 +465,112 @@ router.put('/updatepassword', protect, async (req, res) => {
     });
   } catch (error) {
     console.error('Update password error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error',
+      error: error.message,
+    });
+  }
+});
+
+// @route   POST /api/auth/configure-email
+// @desc    Configure user's personal Gmail for sending emails
+// @access  Private
+router.post('/configure-email', protect, async (req, res) => {
+  try {
+    const { smtpEmail, smtpPassword } = req.body;
+
+    if (!smtpEmail || !smtpPassword) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide email and password',
+      });
+    }
+
+    // Validate email format
+    const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
+    if (!emailRegex.test(smtpEmail)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide a valid Gmail address',
+      });
+    }
+
+    // Update user with SMTP credentials
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found',
+      });
+    }
+
+    user.smtpEmail = smtpEmail;
+    // Encrypt and store smtp password
+    try {
+      user.setSmtpPassword(smtpPassword);
+    } catch (encErr) {
+      console.error('SMTP encryption error:', encErr);
+      return res.status(500).json({ success: false, message: 'Server configuration error' });
+    }
+    user.smtpConfigured = true;
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: 'Email configuration saved successfully',
+      data: {
+        smtpEmail: user.smtpEmail,
+        smtpConfigured: user.smtpConfigured,
+      },
+    });
+  } catch (error) {
+    console.error('Configure email error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error',
+      error: error.message,
+    });
+  }
+});
+
+// @route   GET /api/auth/email-config
+// @desc    Get user's email configuration
+// @access  Private
+router.get('/email-config', protect, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select('smtpEmail smtpConfigured');
+
+    res.status(200).json({
+      success: true,
+      data: {
+        smtpEmail: user.smtpEmail,
+        smtpConfigured: user.smtpConfigured,
+      },
+    });
+  } catch (error) {
+    console.error('Get email config error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error',
+      error: error.message,
+    });
+  }
+});
+
+// @route   GET /api/auth/all
+// @desc    Get all users (Admin only)
+// @access  Private/Admin
+router.get('/all', protect, authorize('admin'), async (req, res) => {
+  try {
+    const users = await User.find().select('-password -resetPasswordToken -resetPasswordExpire');
+    res.status(200).json({
+      success: true,
+      count: users.length,
+      data: users,
+    });
+  } catch (error) {
+    console.error('Get all users error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error',
